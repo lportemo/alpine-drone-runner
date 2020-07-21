@@ -1,0 +1,40 @@
+---
+
+- name: Install docker and docker-compose
+  apk:
+    name: docker,docker-compose
+    update_cache: yes
+    state: latest
+
+- name: enable docker openrc service
+  service:
+    name: docker
+    enabled: true
+    state: started
+
+- name: Create drone-runner config directory
+  file:
+    path: /etc/drone-runner
+    state: directory
+
+- name: Push config
+  template:
+    src: drone-runner/docker-compose.yml
+    dest: /etc/drone-runner/docker-compose.yml
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Push service file
+  template:
+    src: openrc/drone-runner
+    dest: /etc/init.d/drone-runner
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Enable drone-runner at boot
+  service:
+    name: drone-runner
+    enabled: true
+    state: restarted

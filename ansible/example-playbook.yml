@@ -1,0 +1,10 @@
+- name: install drone_runner
+  hosts:
+    - runners
+  roles:
+    - role: drone-runner
+      drone_rpc_proto: https
+      drone_rpc_host: drone.example.com
+      drone_rpc_secret: my_rpc_secret
+      drone_runner_capacity: 2
+      # drone_runner_name is provided by the inventory

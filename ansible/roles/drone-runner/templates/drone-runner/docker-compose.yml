@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+version: "3.5"
+
+services:
+  runner:
+    image: drone/drone-runner-docker:1
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:rw"
+    environment:
+      - DRONE_RPC_PROTO={{ drone_rpc_proto }}
+      - DRONE_RPC_HOST={{ drone_rpc_host }}
+      - DRONE_RPC_SECRET={{ drone_rpc_secret }}
+      - DRONE_RUNNER_CAPACITY={{ drone_runner_capacity }}
+      - DRONE_RUNNER_NAME={{ drone_runner_name }}

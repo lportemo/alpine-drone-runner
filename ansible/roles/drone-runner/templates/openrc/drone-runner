@@ -1,0 +1,34 @@
+#! /sbin/openrc-run
+# {{ ansible_managed }}
+
+
+DOCKER_COMPOSE_BINARY="/usr/bin/docker-compose"
+COMPOSE_YML_LOCATION="/etc/drone-runner/docker-compose.yml"
+
+name="drone-runner via docker-compose"
+description="manages drone runner (docker)"
+
+depend() {
+    need net docker
+    after docker
+}
+
+start() {
+    ebegin "Starting drone-runner"
+    "$DOCKER_COMPOSE_BINARY" -f "$COMPOSE_YML_LOCATION" up -d
+    eend $?
+}
+
+stop() {
+    "$DOCKER_COMPOSE_BINARY" -f "$COMPOSE_YML_LOCATION" down
+}
+
+status() {
+    if [ "$($DOCKER_COMPOSE_BINARY -f $COMPOSE_YML_LOCATION top | wc -l)" -gt "0" ]
+    then
+        einfo "status: started"
+    else
+        einfo "status: stopped"
+        return 3
+    fi
+}
